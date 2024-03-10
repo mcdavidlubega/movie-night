@@ -1,3 +1,4 @@
+// app.js
 const socket = io('http://localhost:3500');
 const mediaPlayer = document.getElementById('mediaPlayer');
 
@@ -8,10 +9,10 @@ socket.on('syncPlayback', (data) => {
   }
 
   // If 'playing' property is provided, adjust playback state
-  if (data.playing !== undefined) {
-    if (data.playing) {
+  if (data.isPlaying !== undefined) {
+    if (data.isPlaying && mediaPlayer.paused) {
       mediaPlayer.play();
-    } else {
+    } else if (!data.isPlaying && !mediaPlayer.paused) {
       mediaPlayer.pause();
     }
   }
@@ -30,6 +31,10 @@ mediaPlayer.addEventListener('pause', () => {
     currentTime: mediaPlayer.currentTime,
     playing: false,
   });
+});
+
+mediaPlayer.addEventListener('seeking', () => {
+  // Add any necessary handling during seeking, if needed
 });
 
 mediaPlayer.addEventListener('seeked', () => {

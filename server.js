@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import { Server } from 'socket.io';
 import path from 'path';
@@ -10,8 +11,6 @@ const PORT = process.env.PORT || 3500;
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
-
-let currentTime = 0; // Initial playback time
 
 const expressServer = app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
@@ -26,17 +25,32 @@ const io = new Server(expressServer, {
   },
 });
 
+let currentTime = 0; // Initial playback time
+let isPlaying = false; // Initial playback state
+
 io.on('connection', (socket) => {
   console.log(`User ${socket.id} connected`);
 
-  // Send the current playback time to the newly connected client
-  socket.emit('syncPlayback', { currentTime });
+  // Send the current playback time and state to the newly connected client
+  socket.emit('syncPlayback', { currentTime, isPlaying });
 
   // Handle synchronization events from clients
   socket.on('syncPlayback', (data) => {
-    // Broadcast the received playback time to all clients
-    io.emit('syncPlayback', data);
-    currentTime = data.currentTime; // Update the current playback time
+    // Update the global timing object only if it's a play event
+    if (data.playing && !isPlaying) {
+      currentTime = data.currentTime;
+      isPlaying = true;
+
+      // Broadcast the updated timing object to all clients
+      io.emit('syncPlayback', { currentTime, isPlaying });
+    } else if (!data.playing && isPlaying) {
+      // If it's a pause event, update the global timing object and broadcast
+      currentTime = data.currentTime;
+      isPlaying = false;
+
+      // Broadcast the updated timing object to all clients
+      io.emit('syncPlayback', { currentTime, isPlaying });
+    }
   });
 
   socket.on('disconnect', () => {
