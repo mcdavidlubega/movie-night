@@ -1,5 +1,5 @@
 // app.js
-const socket = io('http://localhost:3500');
+const socket = io('http://192.168.100.44:3500');
 const mediaPlayer = document.getElementById('mediaPlayer');
 
 // Listen for synchronization events

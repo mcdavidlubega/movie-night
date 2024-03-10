@@ -12,16 +12,17 @@ const PORT = process.env.PORT || 3500;
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
-const expressServer = app.listen(PORT, () => {
+const expressServer = app.listen(PORT, '192.168.100.44', () => {
   console.log(`Listening on port ${PORT}`);
 });
 
 const io = new Server(expressServer, {
   cors: {
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? false
-        : ['http://localhost:5500', 'http://127.0.0.1:5500'],
+    origin: [
+      'http://localhost:5500',
+      'http://127.0.0.1:5500',
+      'http://192.168.100.44:5500',
+    ],
   },
 });
 
