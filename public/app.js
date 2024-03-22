@@ -1,6 +1,21 @@
-// app.js
 const socket = io('http://192.168.100.44:3500');
-const mediaPlayer = document.getElementById('mediaPlayer');
+
+// Create video element
+const mediaPlayer = document.createElement('video');
+mediaPlayer.setAttribute('id', 'mediaPlayer');
+mediaPlayer.setAttribute('controls', 'true');
+mediaPlayer.setAttribute('autoplay', 'true');
+
+// Create source element
+const sourceElement = document.createElement('source');
+sourceElement.setAttribute('src', 'kiss.mp4'); // Specify the path to your video file
+sourceElement.setAttribute('type', 'video/mp4');
+
+// Append source element to video element
+mediaPlayer.appendChild(sourceElement);
+
+// Append video element to the body
+document.body.appendChild(mediaPlayer);
 
 // Listen for synchronization events
 socket.on('syncPlayback', (data) => {
