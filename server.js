@@ -28,7 +28,6 @@ const io = new Server(expressServer, {
 
 let currentTime = 0; // Initial playback time
 let isPlaying = false; // Initial playback state
-
 io.on('connection', (socket) => {
   console.log(`User ${socket.id} connected`);
 

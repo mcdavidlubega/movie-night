@@ -3,7 +3,7 @@ const socket = io('http://192.168.100.44:3500');
 // Create video element
 const mediaPlayer = document.createElement('video');
 mediaPlayer.setAttribute('id', 'mediaPlayer');
-mediaPlayer.setAttribute('controls', 'true');
+mediaPlayer.setAttribute('controls', 'false');
 mediaPlayer.setAttribute('autoplay', 'true');
 
 // Create source element
